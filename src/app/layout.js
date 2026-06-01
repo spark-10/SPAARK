@@ -1,5 +1,4 @@
 
-import './globals.css'; // تأكد من وجود ملف الـ CSS الخاص بتايلوند الافتراضي
 
 export const metadata = {
   title: 'مقاطعة سبارك - لوحة التحكم',
