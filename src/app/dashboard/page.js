@@ -1,297 +1,126 @@
-"use client";
-import React, { useState } from 'react';
-import { UserPlus, Search, RefreshCw, AlertTriangle, Trash2, Shield, LogOut, Moon, Menu, CheckCircle2, X } from 'lucide-react';
+import React from 'react';
+import { Search, RefreshCw, UserPlus, AlertTriangle, Shield, Clock, User } from 'lucide-react';
 
-export default function Dashboard() {
-  // البيانات الافتراضية للمشرفين كما ظهرت تماماً في الصورة البرمجية المرسلة
-  const [admins, setAdmins] = useState([  ]);
-
-  // حالات التحكم في الواجهات
-  const [searchTerm, setSearchTerm] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [successAlert, setSuccessAlert] = useState(false);
-  
-  // حقول إضافة مشرف جديد
-  const [newAdminId, setNewAdminId] = useState('');
-  const [newAdminName, setNewAdminName] = useState('');
-  const [newAdminRole, setNewAdminRole] = useState('مشرف نظام جديد');
-
-  // تصفية المشرفين بناءً على محرك البحث بالاسم أو الأيدي
-  const filteredAdmins = admins.filter(admin => 
-    admin.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    admin.id.includes(searchTerm)
-  );
-
-  // دالة إضافة المشرف الجديد للـ State مباشرة
-  const handleAddAdmin = (e) => {
-    e.preventDefault();
-    if (!newAdminId || !newAdminName) return;
-
-    const newAdmin = {
-      id: newAdminId,
-      name: newAdminName,
-      role: newAdminRole,
-      addedBy: 'أنت (Dev Matrex)',
-      daysAgo: 0,
-      avatar: ''
-    };
-
-    setAdmins([newAdmin, ...admins]);
-    setIsModalOpen(false);
-    setNewAdminId('');
-    setNewAdminName('');
-    
-    // إظهار تنبيه تم الإضافة بنجاح
-    setSuccessAlert(true);
-    setTimeout(() => setSuccessAlert(false), 5000);
-  };
-
-  // دالة حذف المشرف
-  const handleDeleteAdmin = (id) => {
-    setAdmins(admins.filter(admin => admin.id !== id));
-  };
+export default function AdminsPage() {
+  // هنا تضع مصفوفة البيانات التي ستجلبها من السيرفر (فارغة حالياً كقالب)
+  const admins = []; 
 
   return (
-    <div className="min-h-screen bg-[#090f1c] text-slate-100 font-sans flex flex-col pb-12">
-      
-      {/* البار العلوي (Top Navbar) */}
-      <header className="bg-[#0c1424] border-b border-slate-800/60 px-6 py-4 flex items-center justify-between shadow-md">
-        <div className="flex items-center gap-3">
-          <button className="p-2 hover:bg-slate-800 rounded-lg transition text-slate-400">
-            <Menu className="w-5 h-5" />
-          </button>
-          <button className="p-2 hover:bg-slate-800 rounded-lg transition text-slate-400">
-            <Moon className="w-5 h-5" />
-          </button>
-          <button className="p-2 hover:bg-red-950/40 text-red-400 hover:text-red-300 rounded-lg transition">
-            <LogOut className="w-5 h-5" />
-          </button>
-        </div>
-        <div className="text-sm font-semibold tracking-wide text-slate-300 bg-slate-900/50 px-4 py-2 rounded-xl border border-slate-800">
-          مقاطعة سبارك – مشرفين النظام
-        </div>
-      </header>
+    <div dir="rtl" className="min-h-screen bg-[#0d1117] text-white p-4 md:p-8 font-sans">
+      <div className="max-w-7xl mx-auto space-y-6">
 
-      {/* المحتوى الرئيسي للوحة التحكم */}
-      <main className="max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 mt-8 space-y-6">
-        
-        {/* إشعار نجاح الإضافة العلوي الديناميكي */}
-        {successAlert && (
-          <div className="bg-emerald-950/80 border border-emerald-500/30 rounded-xl p-4 flex items-center justify-between shadow-xl text-emerald-400 animate-fadeIn duration-300">
-            <div className="flex items-center gap-3">
-              <CheckCircle2 className="w-5 h-5 text-emerald-500" />
-              <span className="font-medium text-sm sm:text-base">تم إضافة الشخص بنجاح إلى قائمة مشرفي النظام! لديه الآن الصلاحية الكاملة.</span>
-            </div>
-            <button onClick={() => setSuccessAlert(false)} className="text-emerald-500/60 hover:text-emerald-400">
-              <X className="w-5 h-5" />
+        {/* الترويسة العلوية */}
+        <div className="bg-[#161b22] p-4 rounded-xl flex justify-between items-center border border-slate-800/50 shadow-sm">
+          <h1 className="text-lg font-bold text-gray-200">مقاطعة سبارك - مشرفين النظام</h1>
+        </div>
+
+        {/* قسم الإحصائيات وزر الإضافة */}
+        <div className="flex flex-col-reverse md:flex-row gap-6">
+          
+          <div className="w-full md:w-1/4 flex flex-col justify-start">
+            <button className="bg-[#facc15] hover:bg-[#eab308] text-black font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 transition-all shadow-[0_0_15px_rgba(250,204,21,0.2)]">
+              <UserPlus size={20} />
+              إضافة مشرف
             </button>
           </div>
-        )}
 
-        {/* ترويسة الصفحة وزر الإضافة الرئيسي */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div className="space-y-1">
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">مشرفين النظام</h1>
-            <p className="text-sm text-slate-400">الأشخاص المضافين هنا يحصلون على صلاحية كاملة على النظام بالكامل. استخدم بحذر شديد.</p>
-          </div>
-          <button 
-            onClick={() => setIsModalOpen(true)}
-            className="self-start sm:self-center bg-[#f5c43a] hover:bg-[#e0b02b] text-black font-bold px-5 py-3 rounded-xl transition duration-150 shadow-lg shadow-yellow-500/10 flex items-center gap-2 text-sm"
-          >
-            <UserPlus className="w-4 h-4 stroke-[2.5]" />
-            إضافة مشرف
-          </button>
-        </div>
-
-        {/* شبكة الإحصائيات (Metrics Cards) */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-[#121b2d] border border-slate-800/80 rounded-2xl p-6 flex flex-col justify-between h-32 shadow-sm">
-            <span className="text-xs font-semibold text-slate-400">مضاف بواسطتك</span>
-            <div className="flex flex-col">
-              <span className="text-3xl font-black text-white">0</span>
-              <span className="text-xs text-slate-500 mt-1">مشرفون أضفتهم أنت</span>
+          <div className="w-full md:w-3/4 bg-[#161b22] p-6 rounded-xl border border-slate-800/50 shadow-sm space-y-6">
+            <div className="text-right">
+              <h2 className="text-2xl font-bold mb-2">مشرفين النظام</h2>
+              <p className="text-gray-400 text-sm">الأشخاص المضافين هنا يحصلون على صلاحية كاملة على النظام بالكامل. استخدم بحذر شديد.</p>
             </div>
-          </div>
-          
-          <div className="bg-[#121b2d] border border-slate-800/80 rounded-2xl p-6 flex flex-col justify-between h-32 shadow-sm">
-            <span className="text-xs font-semibold text-slate-400">آخر إضافة</span>
-            <div className="flex flex-col">
-              <span className="text-3xl font-black text-white">منذ 9 يوم</span>
-              <span className="text-xs text-slate-500 mt-1">آخر مشرف تمت إضافته</span>
-            </div>
-          </div>
 
-          <div className="bg-[#121b2d] border border-slate-800/80 rounded-2xl p-6 flex flex-col justify-between h-32 shadow-sm">
-            <span className="text-xs font-semibold text-slate-400">إجمالي المشرفين</span>
-            <div className="flex flex-col">
-              <span className="text-3xl font-black text-white">{admins.length}</span>
-              <span className="text-xs text-slate-500 mt-1">أشخاص لديهم صلاحيات النظام</span>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="bg-[#1c212b] p-5 rounded-xl border border-slate-700/50">
+                <p className="text-gray-400 text-sm mb-2 text-right">إجمالي المشرفين</p>
+                {/* استبدل الصفر بمتغير الإجمالي الخاص بك */}
+                <p className="text-3xl font-bold text-right">0</p> 
+              </div>
+              <div className="bg-[#1c212b] p-5 rounded-xl border border-slate-700/50">
+                <p className="text-gray-400 text-sm mb-2 text-right">آخر إضافة</p>
+                {/* استبدل النص بمتغير الوقت الخاص بك */}
+                <p className="text-3xl font-bold text-right">--</p>
+              </div>
+              <div className="bg-[#1c212b] p-5 rounded-xl border border-slate-700/50">
+                <p className="text-gray-400 text-sm mb-2 text-right">مضاف بواسطتك</p>
+                {/* استبدل الصفر بمتغير الإضافات الخاصة بالمستخدم */}
+                <p className="text-3xl font-bold text-right">0</p>
+              </div>
+            </div>
+
+            <div className="bg-[#422c16] text-[#facc15] p-3 rounded-lg flex items-center gap-3 text-sm border border-[#5c3e1a]">
+              <AlertTriangle size={20} className="shrink-0" />
+              <span>إضافة شخص كمشرف نظام يمنحه صلاحية إدارة كاملة على جميع القطاعات والإعدادات — تأكد قبل الإضافة.</span>
             </div>
           </div>
         </div>
 
-        {/* صندوق التحذير الأصفر */}
-        <div className="bg-[#1c1817] border border-amber-500/20 rounded-xl p-4 flex items-start gap-3 shadow-inner">
-          <AlertTriangle className="w-5 h-5 text-[#f5c43a] shrink-0 mt-0.5" />
-          <p className="text-xs sm:text-sm text-[#f5c43a]/90 leading-relaxed font-medium">
-            إضافة شخص كمشرف نظام يمنحه صلاحية كاملة على جميع القطاعات والإعدادات — تأكد قبل الإضافة. فقط أصحاب الصلاحيات العامة يمكنهم الوصول لهذه الصفحة.
-          </p>
-        </div>
-
-        {/* شريط البحث والتحديث */}
-        <div className="bg-[#111928] border border-slate-800/80 rounded-xl p-3 flex flex-col sm:flex-row items-center gap-3 shadow-md">
-          <div className="relative w-full sm:flex-1">
-            <Search className="w-5 h-5 text-slate-500 absolute right-4 top-1/2 -translate-y-1/2" />
-            <input 
-              type="text"
-              placeholder="ابحث بالاسم أو المعرف..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-[#090f1c] border border-slate-800 rounded-xl pr-12 pl-4 py-3 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-slate-700 transition"
-            />
-          </div>
-          <button 
-            onClick={() => setSearchTerm('')}
-            className="w-full sm:w-auto bg-[#162238] hover:bg-[#1c2b47] text-slate-300 font-medium px-5 py-3 rounded-xl transition text-sm flex items-center justify-center gap-2 border border-slate-800"
-          >
-            <RefreshCw className="w-4 h-4" />
+        {/* شريط البحث */}
+        <div className="flex flex-col md:flex-row gap-4">
+          <button className="bg-[#161b22] hover:bg-[#1c212b] text-gray-300 px-6 py-3 rounded-xl border border-slate-700/50 flex items-center justify-center gap-2 transition-colors order-2 md:order-1 w-full md:w-auto">
+            <RefreshCw size={18} />
             تحديث
           </button>
-        </div>
-
-        {/* قائمة بطاقات المشرفين المتجاوبة */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
-          {filteredAdmins.map((admin) => (
-            <div key={admin.id} className="bg-[#111928] border border-slate-800/70 rounded-2xl p-5 flex flex-col justify-between space-y-5 transition duration-200 hover:border-slate-700 relative overflow-hidden shadow-lg group">
-              
-              <div className="space-y-4">
-                {/* الجزء العلوي للبطاقة: الصورة والاسم والمعرف */}
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-300 font-black shrink-0 uppercase text-lg shadow-inner">
-                    {admin.name.substring(0, 2)}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <h3 className="font-bold text-white text-sm sm:text-base truncate tracking-wide">{admin.name}</h3>
-                    <p className="text-[10px] sm:text-xs text-slate-500 font-mono select-all mt-0.5 truncate">{admin.id}</p>
-                  </div>
-                </div>
-
-                {/* التفاصيل والمسؤوليات */}
-                <div className="space-y-1.5 text-xs text-slate-400 bg-[#090f1c]/50 p-3 rounded-xl border border-slate-800/40">
-                  <div className="flex items-center gap-2 truncate">
-                    <Shield className="w-3.5 h-3.5 text-slate-500 shrink-0" />
-                    <span className="font-medium text-slate-300 truncate">{admin.role}</span>
-                  </div>
-                  <div className="text-[11px] text-slate-500 flex items-center gap-1.5">
-                    <span>أُضيف بواسطة:</span>
-                    <span className="text-slate-400 font-medium">{admin.addedBy}</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* ذيل البطاقة: الأزرار وحالة المدة الإضافية */}
-              <div className="flex items-center justify-between gap-2 pt-2 border-t border-slate-800/50 text-xs">
-                <button 
-                  onClick={() => handleDeleteAdmin(admin.id)}
-                  className="bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white px-3 py-2 rounded-lg transition font-medium flex items-center gap-1 border border-red-500/20 hover:border-transparent"
-                >
-                  <Trash2 className="w-3.5 h-3.5" />
-                  حذف
-                </button>
-                <div className="flex flex-col items-end text-[10px] text-slate-500">
-                  <span className="bg-[#172033] text-amber-400/90 font-bold px-2.5 py-1 rounded-md border border-amber-500/10 mb-1">
-                    مشرف نظام
-                  </span>
-                  <span>منذ {admin.daysAgo} يوم</span>
-                </div>
-              </div>
-
-            </div>
-          ))}
-
-          {/* في حال عدم وجود أي نتائج في البحث */}
-          {filteredAdmins.length === 0 && (
-            <div className="col-span-full py-12 text-center text-slate-500 text-sm">
-              لم يتم العثور على أي مشرفين يطابقون معايير البحث.
-            </div>
-          )}
-        </div>
-      </main>
-
-      {/* النافذة المنبثقة الإضافية الاحترافية (Add Admin Modal) */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fadeIn">
-          <div className="bg-[#111928] border border-slate-800 max-w-md w-full rounded-2xl shadow-2xl p-6 space-y-5 animate-scaleUp">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                <UserPlus className="w-5 h-5 text-[#f5c43a]" />
-                تعيين مشرف نظام جديد
-              </h2>
-              <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800">
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <form onSubmit={handleAddAdmin} className="space-y-4">
-              <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-400">اسم المشرف بالكامل</label>
-                <input 
-                  type="text" 
-                  required
-                  placeholder="مثال: مروان البدوي"
-                  value={newAdminName}
-                  onChange={(e) => setNewAdminName(e.target.value)}
-                  className="w-full bg-[#090f1c] border border-slate-800 rounded-xl px-4 py-3 text-sm text-slate-200 focus:outline-none focus:border-slate-700 transition"
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-400">معرف الديسكورد (Discord User ID)</label>
-                <input 
-                  type="text" 
-                  required
-                  placeholder="مثال: 895962505753546872"
-                  value={newAdminId}
-                  onChange={(e) => setNewAdminId(e.target.value)}
-                  className="w-full bg-[#090f1c] border border-slate-800 rounded-xl px-4 py-3 text-sm text-slate-200 font-mono text-right focus:outline-none focus:border-slate-700 transition"
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-400">الرتبة / الدور الوظيفي داخل لوحة التحكم</label>
-                <input 
-                  type="text" 
-                  placeholder="مثال: مسؤول القطاعات أو الدعم الفني"
-                  value={newAdminRole}
-                  onChange={(e) => setNewAdminRole(e.target.value)}
-                  className="w-full bg-[#090f1c] border border-slate-800 rounded-xl px-4 py-3 text-sm text-slate-200 focus:outline-none focus:border-slate-700 transition"
-                />
-              </div>
-
-              <div className="bg-amber-500/5 border border-amber-500/10 rounded-xl p-3 text-[11px] text-amber-400/80 leading-relaxed">
-                تنبيه: بمجرد النقر على إضافة، سيُمنح الحساب وصولاً فورياً لإدارة البوت بالكامل وتعديل الأقسام.
-              </div>
-
-              <div className="flex items-center gap-3 pt-2">
-                <button 
-                  type="submit"
-                  className="flex-1 bg-[#f5c43a] hover:bg-[#e0b02b] text-black font-bold py-3 rounded-xl transition text-sm shadow-md"
-                >
-                  إضافة وإعطاء الصلاحية
-                </button>
-                <button 
-                  type="button"
-                  onClick={() => setIsModalOpen(false)}
-                  className="flex-1 bg-[#162238] hover:bg-[#1c2b47] text-slate-300 font-medium py-3 rounded-xl transition text-sm border border-slate-800"
-                >
-                  إلغاء الأمر
-                </button>
-              </div>
-            </form>
+          
+          <div className="flex-1 bg-[#161b22] rounded-xl border border-slate-800/50 p-2 flex items-center gap-3 px-4 order-1 md:order-2">
+            <Search size={20} className="text-gray-500" />
+            <input 
+              type="text" 
+              placeholder="ابحث بالاسم أو المعرف..." 
+              className="bg-transparent border-none outline-none w-full text-white placeholder-gray-600 focus:ring-0 text-right" 
+            />
           </div>
         </div>
-      )}
 
+        {/* شبكة بطاقات المشرفين الديناميكية */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {admins.map((admin, index) => (
+            <AdminCard key={index} data={admin} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// مكون فرعي لبطاقة المشرف يعتمد كلياً على البيانات الممررة له
+function AdminCard({ data }) {
+  return (
+    <div className="bg-[#161b22] p-5 rounded-xl border border-slate-800/50 flex flex-col gap-4 hover:border-slate-600 transition-colors">
+      <div className="flex justify-between items-start flex-row-reverse">
+        <div className="flex flex-col items-end w-full">
+          <div className="flex items-center gap-3 mb-1 flex-row-reverse">
+            <div className="w-10 h-10 rounded-full bg-slate-700 overflow-hidden">
+               {/* سيتم عرض صورة المشرف من البيانات */}
+               {data.avatar ? (
+                 <img src={data.avatar} alt="avatar" className="w-full h-full object-cover" />
+               ) : (
+                 <div className="w-full h-full bg-gradient-to-tr from-slate-600 to-slate-800"></div>
+               )}
+            </div>
+            <h3 className="font-bold flex items-center gap-1">
+              {data.name}
+              {data.isOwner && <span className="text-yellow-500 text-xs">👑</span>}
+            </h3>
+          </div>
+          <span className="text-xs text-gray-500 font-mono">{data.id}</span>
+        </div>
+      </div>
+
+      <div className="space-y-3 text-sm text-gray-400 text-right mt-2">
+        <p className="flex items-center justify-end gap-2"><span className="text-gray-300">{data.role}</span> <Shield size={14} className="text-blue-400"/></p>
+        <p className="flex items-center justify-end gap-2"><span className="text-gray-300">أضيف بواسطة {data.addedBy}</span> <User size={14} className="text-gray-500" /></p>
+        <p className="flex items-center justify-end gap-2"><span className="text-gray-300">منذ {data.time}</span> <Clock size={14} className="text-gray-500" /></p>
+      </div>
+
+      <div className="flex justify-between items-center mt-2 pt-4 border-t border-slate-800/50 flex-row-reverse">
+        <span className="bg-[#422c16] text-[#facc15] text-xs px-3 py-1 rounded-md border border-[#5c3e1a] flex items-center gap-1">
+           مشرف نظام <Shield size={12} />
+        </span>
+        <button className="bg-red-500/10 hover:bg-red-500/20 text-red-500 px-4 py-1.5 rounded-lg text-sm font-medium transition-colors">
+          حذف
+        </button>
+      </div>
     </div>
   );
 }
