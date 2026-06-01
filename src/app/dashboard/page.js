@@ -4,13 +4,7 @@ import { UserPlus, Search, RefreshCw, AlertTriangle, Trash2, Shield, LogOut, Moo
 
 export default function Dashboard() {
   // البيانات الافتراضية للمشرفين كما ظهرت تماماً في الصورة البرمجية المرسلة
-  const [admins, setAdmins] = useState([
-    { id: '786265483955273729', name: 'Perfume Papi', role: 'مساعد مسؤول القطاعات', addedBy: 'أبو حمد', daysAgo: 9, avatar: '' },
-    { id: '1080850232457310308', name: 'أبو خديجة 👑', role: 'قائد الهلال ابو خديجة', addedBy: 'أبو حمد', daysAgo: 12, avatar: '' },
-    { id: '294467593555804163', name: 'مروان البدوي', role: 'مسؤول الوظائف', addedBy: 'أبو حمد', daysAgo: 12, avatar: '' },
-    { id: '895962505753546872', name: 'MATREX ⚡👑', role: 'مسؤول المعتمد', addedBy: 'أبو حمد', daysAgo: 13, avatar: '' },
-    { id: '1345931263818596424', name: 'محمد بو تميم', role: 'مسؤول اللاعب المعتمد', addedBy: 'أبو حمد', daysAgo: 27, avatar: '' },
-  ]);
+  const [admins, setAdmins] = useState([ ]);
 
   // حالات التحكم في الواجهات
   const [searchTerm, setSearchTerm] = useState('');
